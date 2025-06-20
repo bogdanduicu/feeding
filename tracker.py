@@ -15,6 +15,7 @@ st.title("🥣 Toddler Feeding Tracker")
 st.sidebar.header("Add New Meal Entry")
 
 with st.sidebar.form("meal_form"):
+    user = st.text_input("Your Name")
     meal_id = str(uuid.uuid4())
     meal_date = st.date_input("Meal Date", value = datetime.today())
     meal_time = st.time_input("Meal time", value=datetime.now().time())
@@ -51,6 +52,7 @@ with st.sidebar.form("meal_form"):
 
     if submitted:
         new_entry = {
+            "user": user,
             "meal_id": meal_id,
             "datetime": meal_datetime.strftime("%Y-%m-%d %H:%M:%S"),
             "meal_type": meal_type,
@@ -78,6 +80,8 @@ st.header("📊 Feeding Insights")
 if os.path.exists(CSV_FILE):
     df = pd.read_csv(CSV_FILE)
 
+#filter by user
+    df = df[df["user"].str.lower() == user.strip().lower()]
     # Summary Stats
     st.subheader("Quick Stats")
     st.write(f"🗓️ Total meals logged: {len(df)}")
